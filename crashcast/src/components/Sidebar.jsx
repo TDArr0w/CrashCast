@@ -40,11 +40,7 @@ function Sidebar() {
         </div>
       </div>
 
-      <div className="sidebar-widget quick-links">
-        <button className="btn btn-primary">Report a New Incident</button>
-        <button className="btn btn-danger">Call 911</button>
-        <a href="#" className="directory-link">Local Emergency Services Directory</a>
-      </div>
+     
 
       <div className="sidebar-widget">
         <h3>News/Alerts Feed</h3>
