@@ -1,0 +1,147 @@
+/* ======== GLOBAL VARIABLES ======== */
+:root {
+  // Color palette
+  --primary-color: #007bff;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --success-color: #28a745;
+  --light-color: #f8f9fa;
+  --dark-color: #343a40;
+  --border-color: #dee2e6;
+
+  // fonts
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ======== base styles ======== */
+body {
+  margin: 0;
+  background-color: #f4f7f6;
+  color: var(--dark-color);
+  min-width: 320px;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &.dark {
+    background-color: var(--dark-color);
+    color: #f4f7f6;
+
+    // dark-mode overrides
+    a {
+      color: #fff;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .btn-primary {
+      background-color: #0056b3;
+      &:hover {
+        background-color: #004a99;
+      }
+    }
+
+    .btn-danger {
+      background-color: #9e1d2b;
+      &:hover {
+        background-color: #7d1621;
+      }
+    }
+
+    .container {
+      background-color: #2b2b2b;
+    }
+
+    .sidebar {
+      background-color: #222;
+      border-right: 1px solid #444;
+    }
+
+    h3 {
+      border-bottom: 2px solid #555;
+    }
+  }
+}
+
+/* ======== CONTAINERS ======== */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.toggle-n-search {
+  display: flex;
+}
+
+#dark-mode-toggle {
+  margin-right: 2em;
+}
+
+/* ======== typogaphy ======== */
+h1, h2, h3 {
+  margin-top: 0;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 1.75rem;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: 1.25rem;
+  margin-bottom: 15px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 5px;
+}
+
+//links
+a {
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* ======== buttons ======== */
+.btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+
+  &.btn-primary {
+    background-color: var(--primary-color);
+    color: #fff;
+
+    &:hover {
+      background-color: #0069d9;
+    }
+  }
+
+  &.btn-danger {
+    background-color: var(--danger-color);
+    color: #fff;
+
+    &:hover {
+      background-color: #c82333;
+    }
+  }
+}
