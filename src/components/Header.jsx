@@ -1,14 +1,13 @@
 import React from 'react';
 import { DarkModeToggle } from './DarkToggle';
+import logo from '../assets/CrashCast-Text.png';
 
 function Header() {
   return (
     <header className="site-header">
       <div className="container header-content">
         <div className="logo">
-          {/* Vite serves from the 'public' folder as root */}
-          <img src="/logo-placeholder.png" alt="CrashCast Logo" className="logo-img" />
-          <h1>CrashCast</h1>
+          <img src={logo} alt="CrashCast Logo" className="logo-img" />
         </div>
         <nav className="main-nav">
           <ul>
