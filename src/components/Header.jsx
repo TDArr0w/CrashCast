@@ -1,4 +1,5 @@
 import React from 'react';
+import { DarkModeToggle } from './DarkToggle';
 import logo from '../assets/CrashCast-Text.png';
 
 function Header() {
@@ -17,10 +18,13 @@ function Header() {
 
           </ul>
         </nav>
+        <div className='toggle-n-search'>
+          <DarkModeToggle/>
         <form className="search-bar">
           <input type="search" placeholder="Search locations..." />
           <button type="submit">&#128269;</button>
         </form>
+        </div>
       </div>
     </header>
   );
