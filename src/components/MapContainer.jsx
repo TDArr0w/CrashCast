@@ -1,28 +1,25 @@
 import React from 'react';
+import {APIProvider, Map} from '@vis.gl/react-google-maps';
 
 function MapContainer() {
+  const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
+  console.log('Using Google Maps API Key:', apiKey || 'No API Key Found');
+
   return (
-    <section className="map-container">
-      <h2>Live Traffic & Incident Map</h2>
-      <div id="map-placeholder">
-        
-        {/* This is a placeholder popup */}
-        <div className="map-popup">
-          <strong>Major Accident</strong>
-          <p>I-5 N, Mile 123 - Delays Expected</p>
+    <APIProvider apiKey={apiKey} onLoad={() => console.log('Maps API has loaded.')}>
+      <section className="map-container">
+        <h2>Live Traffic & Incident Map</h2>
+        <div id="map-placeholder">
+          <Map
+            defaultZoom={13}
+            defaultCenter={ { lat: -33.860664, lng: 151.208138 } }
+            onCameraChanged={ (ev) =>
+              console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
+            }>
+          </Map>
         </div>
-
-        {/* This div would be replaced by your interactive map */}
-        <p className="map-text">Interactive Map Loads Here</p>
-
-        <div className="map-legend">
-          <strong>Legend</strong>
-          <p><span className="legend-dot" style={{ backgroundColor: '#dc3545' }}></span> Heavy Traffic / Crash</p>
-          <p><span className="legend-dot" style={{ backgroundColor: '#ffc107' }}></span> Moderate Traffic</p>
-          <p><span className="legend-dot" style={{ backgroundColor: '#28a745' }}></span> Clear Traffic</p>
-        </div>
-      </div>
-    </section>
+      </section>
+    </APIProvider>
   );
 }
 
