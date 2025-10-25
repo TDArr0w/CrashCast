@@ -1,11 +1,17 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react' // if you use it
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: { host: '0.0.0.0' },        // for `vite` dev server (optional here)
   preview: {
-      host: '0.0.0.0',
-      port: 4173, // Default Vite preview port
-  }
+    host: '0.0.0.0',                  // bind to all interfaces
+    port: 4173,
+    allowedHosts: [
+      'ec2-54-85-61-166.compute-1.amazonaws.com',
+      '54.85.61.166',  
+      'crash-cast.com', 
+      'www.crash-cast.com'
+    ],
+  },
 })
