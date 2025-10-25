@@ -1,24 +1,35 @@
+// App.jsx
 import React from 'react';
-import './App.css'; // Import component-specific styles
-
-// Import components
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css';
 import Header from './components/Header.jsx';
 import MapContainer from './components/MapContainer.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import Footer from './components/Footer.jsx';
+import Help from './components/Help.jsx';
 
 function App() {
   return (
-    <> {/* Using React fragment shorthand */}
+    <Router>
       <Header />
       
       <main className="container main-content">
-        <MapContainer />
-        <Sidebar />
+        <Routes>
+          {/* Home page route - loads by default */}
+          <Route path="/" element={
+            <>
+              <MapContainer />
+              <Sidebar />
+            </>
+          } />
+          
+          {/* Help page route */}
+          <Route path="/help" element={<Help />} />
+        </Routes>
       </main>
-
+      
       <Footer />
-    </>
+    </Router>
   );
 }
 
