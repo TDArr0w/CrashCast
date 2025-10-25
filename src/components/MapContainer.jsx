@@ -12,7 +12,7 @@ function MapContainer() {
         <div id="map-placeholder">
           <Map
             defaultZoom={13}
-            defaultCenter={ { lat: -33.860664, lng: 151.208138 } }
+            defaultCenter={ { lat: 47.6061, lng: -122.3328 } }
             onCameraChanged={ (ev) =>
               console.log('camera changed:', ev.detail.center, 'zoom:', ev.detail.zoom)
             }>
