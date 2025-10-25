@@ -1,6 +1,6 @@
 import React from 'react';
 
-// Data for ambulances (this would normally come from an API)
+
 const ambulanceData = [
   { id: 'AMB 147', status: 'Available - Station 3', type: 'available' },
   { id: 'AMB 088', status: 'En Route - Incident I-5 (ETA 5 min)', type: 'en-route' },
@@ -8,7 +8,7 @@ const ambulanceData = [
   { id: 'AMB 102', status: 'Available - Station 1', type: 'available' },
 ];
 
-// A small component just for the ambulance item
+
 function AmbulanceItem({ id, status, type }) {
   return (
     <div className="ambulance-item">
