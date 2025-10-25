@@ -9,8 +9,9 @@ export default defineConfig({
     port: 4173,
     allowedHosts: [
       'ec2-54-85-61-166.compute-1.amazonaws.com',
-      '54.85.61.166'                  // optional: allow raw IP too
-      // add your real domain here later, e.g. 'app.example.com'
+      '54.85.61.166',  
+      'crash-cast.com', 
+      'www.crash-cast.com'
     ],
   },
 })
