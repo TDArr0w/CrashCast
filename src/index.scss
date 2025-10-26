@@ -263,3 +263,43 @@ a {
     margin-bottom: 0;
   }
 }
+.page-content {
+  padding: 60px 20px;
+}
+
+.page-content h1,
+.page-content h2 {
+  margin-top: 40px;  
+  margin-bottom: 20px;
+}
+
+.page-content p,
+.page-content ul {
+  margin-bottom: 20px; 
+}
+
+.page-content ul li {
+  margin-bottom: 10px;
+}
+
+.stat-box {
+  min-width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.stat-number {
+  display: block;
+  font-size: 4rem;
+  font-weight: 700;
+  color: #ff4500;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.stat-text {
+  font-size: 1.25rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
