@@ -1,115 +1,74 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const stats = [
+  { number: '7%', text: 'Increase in fatalities for every 10-minute increase in ambulance journey time.' },
+  { number: '2.6%', text: 'Increase in crash fatality odds for every 1-minute increase in EMS response time.' },
+  { number: '$340B', text: 'Annual cost of motor vehicle crashes in the U.S. in 2019.' },
+  { number: '10s', text: 'Frequency of a car crash involving an injury in the U.S.' },
+];
 
 function Landing() {
+  const [currentStatIndex, setCurrentStatIndex] = useState(0);
+  const [region, setRegion] = useState('');
+  const navigate = useNavigate();
+
+  // Carousel auto-rotation logic
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStatIndex((prevIndex) => (prevIndex + 1) % stats.length);
+    }, 5000); // Change stat every 5 seconds (5000ms)
+
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (region.trim()) {
+      // Navigate to /home and pass the region as a query parameter
+      navigate(`/home?region=${encodeURIComponent(region.trim())}`);
+    }
+  };
+
   return (
     <div className="landing-page">
-      {/* HERO SECTION: THE CORE VALUE PROPOSITION 
-        Focus: Proactive vs. Reactive and the life-saving time difference.
-      */}
-      <header className="hero-section">
-        <h1>
-          Turn a 10-Minute Response into a **2-Minute** Life-Saver.
-        </h1>
+      <section className="hero-section">
+        <h1>Predictive Dispatch for Life-Saving Response.</h1>
         <p className="subtitle">
-          CrashCast is the predictive ambulance dispatch platform that stages your assets
-          **before** the 911 call comes in, giving patients the precious minutes they need.
+          Turn a 10-minute response into a 2-minute advantage. CrashCast uses predictive modeling to pre-position resources,
+          saving lives and valuable time.
         </p>
-        <button className="cta-button">See the Predictive Map in Action</button>
-      </header>
+      </section>
 
-      <main>
-        {/* STATISTICS SECTION 1: THE TIME-TO-TREATMENT IMPACT 
-          Focus: Directly linking response time to patient survival and recovery.
-        */}
-        <section className="stat-grid-section impact-time">
-          <h2>🚑 The Time-to-Treatment Impact: Every Minute Counts</h2>
-          <div className="stat-grid">
-            <div className="stat-card critical">
-              <span className="stat-number">7%</span>
-              <p className="stat-label">
-                **Increase in Fatalities** for every 10-minute increase in ambulance journey time.
-              </p>
-            </div>
-
-            <div className="stat-card">
-              <span className="stat-number">2.6%</span>
-              <p className="stat-label">
-                Higher odds of a crash being fatal for every **1-minute** increase in EMS response time on freeways.
-              </p>
-            </div>
-
-            <div className="stat-card">
-              <span className="stat-number">6%</span>
-              <p className="stat-label">
-                Increased risk of **poor functional recovery** (long-term disability) for every 10-minute increase in pre-hospital time.
-              </p>
-            </div>
+      <section className="stats-carousel-section">
+        <div className="stats-carousel-container">
+          <div className="stats-carousel-track" style={{ transform: `translateX(-${currentStatIndex * 100}%)` }}>
+            {stats.map((stat, index) => (
+              <div key={index} className="stat-box">
+                <span className="stat-number">{stat.number}</span>
+                <p className="stat-text">{stat.text}</p>
+              </div>
+            ))}
           </div>
-          <blockquote className="insight-quote">
-            CrashCast doesn't just save lives—it protects the **quality of life**.
-          </blockquote>
-        </section>
-
-        <hr className="divider" />
-
-        {/* STATISTICS SECTION 2: THE ECONOMIC & OPERATIONAL IMPACT 
-          Focus: The business case—efficiency, cost, and maximizing readiness.
-        */}
-        <section className="stat-section operational-value">
-          <h2>💵 Economic & Operational Value</h2>
-          <div className="stat-row">
-            <div className="stat-block large">
-              <span className="stat-large">$340 Billion</span>
-              <p className="stat-label">
-                The total cost of motor vehicle crashes in the U.S. in 2019 alone. **Reduce medical costs** by reducing critical response time.
-              </p>
-            </div>
-            <div className="stat-block small">
-              <h3>Intelligent Deployment</h3>
-              <p>
-                An ambulance staged in the wrong location is a high-cost asset generating zero revenue. CrashCast ensures **data-driven deployment**, maximizing the readiness and impact of every unit.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <hr className="divider" />
-
-        {/* STATISTICS SECTION 3: THE "BIG PICTURE" CONTEXT 
-          Focus: Scale and urgency of the problem.
-        */}
-        <section className="stat-section global-scale">
-          <h2>📈 The Global Mandate</h2>
-          <div className="stat-row">
-            <div className="stat-block">
-              <span className="stat-number-small">1.35 Million</span>
-              <p className="stat-label">
-                Lives lost globally on roadways every year. Road traffic crashes are the **leading cause of death for ages 5-29**.
-              </p>
-            </div>
-            <div className="stat-block">
-              <span className="stat-number-small">Every 10 Seconds</span>
-              <p className="stat-label">
-                The frequency of a car crash involving an injury in the U.S. Small improvements in efficiency have a **massive cumulative impact**.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* CLOSING/RECAP: CALL TO ACTION 
-        */}
-        <section className="cta-recap">
-          <h2>Stop Being Reactive. Start Being Predictive.</h2>
-          <p>
-            The current model forces you to wait for the 911 call. CrashCast predicts **where** that call is coming from, allowing your team to be **proactive**. Stage your ambulance 2 minutes away instead of 10.
-          </p>
-          <button className="cta-button secondary">Request a Demo Today</button>
-        </section>
-      </main>
-
-      <footer className="landing-footer">
-        <p>&copy; 2025 CrashCast. Predictive Dispatch Platform.</p>
-      </footer>
+        </div>
+      </section>
+      
+      <section className="region-input-section">
+        <h2>See Your Region’s Potential</h2>
+        <form onSubmit={handleSubmit} className="region-form">
+          <input
+            type="text"
+            placeholder="Enter your city or region (e.g., 'San Francisco')"
+            value={region}
+            onChange={(e) => setRegion(e.target.value)}
+            required
+            aria-label="Enter your region"
+          />
+          <button type="submit" className="btn btn-primary">
+            Analyze Now
+          </button>
+        </form>
+      </section>
     </div>
   );
 }
