@@ -19,7 +19,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x:hidden;
+  overflow-x:hidden!important;
 }
 
 /* ======== base styles ======== */
@@ -263,9 +263,10 @@ a {
 /* Region Input Form */
 .region-input-section {
   padding: 20px 0;
-
+  bottom: 70px;
+  position:relative;
   h2 {
-    font-size: 2rem;
+    font-size: 3rem;
     margin-bottom: 30px;
   }
 }
