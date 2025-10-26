@@ -46,14 +46,19 @@ const COLOR_RANGE = [
 // ---- Deck.gl Overlay ----
 function DeckGLOverlay({ layers }) {
   const map = useMap();
-  const [overlay] = useState(() => new GoogleMapsOverlay());
+  const [overlay] = useState(() => new GoogleMapsOverlay({
+    interleaved: false,
+  }));
+
+  useEffect(() => {
+    overlay.setProps({ layers });
+  }, [overlay, layers]);
 
   useEffect(() => {
     if (map) overlay.setMap(map);
     return () => overlay.setMap(null);
   }, [map, overlay]);
 
-  overlay.setProps({ layers });
   return null;
 }
 
@@ -71,17 +76,16 @@ function MapContainer() {
 
   // ✅ Dynamic heatmap scaling (fixes red blob issue)
   const layers = useMemo(() => {
-    const baseRadius = 40;
-    const zoomFactor = Math.pow(2, camState.zoom - 13);
-    const adjustedWeightScale = 1 / zoomFactor;
+    // Adjust radius based on zoom level for a consistent appearance
+    const radiusPixels = Math.max(10, 60 - (camState.zoom - 13) * 5);
 
     return [
       new HeatmapLayer({
-        id: `accident-heatmap-${camState.zoom}`,
+        id: 'accident-heatmap', // Use a stable ID
         data: accidentData,
         getPosition: d => d.COORDINATES,
-        getWeight: d => d.WEIGHT * adjustedWeightScale,
-        radiusPixels: baseRadius,
+        getWeight: d => d.WEIGHT,
+        radiusPixels, // Use the dynamically calculated radius
         intensity: 1,
         threshold: 0.03,
         colorRange: COLOR_RANGE,
@@ -89,7 +93,7 @@ function MapContainer() {
         gpuAggregation: true,
       })
     ];
-  }, [accidentData, camState.zoom]);
+  }, [accidentData, camState.zoom]); // Re-calculate only on zoom change
 
   const handleCameraChange = useCallback(ev => setCamState(ev.detail), []);
 
