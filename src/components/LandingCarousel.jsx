@@ -1,5 +1,6 @@
 import React from 'react';
 import '../styles/LandingCarousel.css';
+import LandingAmbulance from './LandingAmbulance';
 
 const LandingCarousel = ({
   size = 3500,
@@ -22,16 +23,18 @@ const LandingCarousel = ({
 
   return (
     <div className="landing-carousel-container" style={{ height: `${arcHeight}px` }}>
-
+    
       <div
         className="landing-carousel"
         style={{
           transform: `translateY(${arcOffset * 100}%)`,
         }}
       >
+      
         <div className="road-base" style={roadStyle}></div>
         <div className="road-stripe" style={roadStyle}></div>
       </div>
+      <LandingAmbulance />
     </div>
   );
 };
