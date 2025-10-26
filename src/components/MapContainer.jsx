@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect, useContext } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useContext, Children } from 'react';
 import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 import { APIProvider, Map, useMap } from '@vis.gl/react-google-maps';
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
@@ -44,6 +44,16 @@ const COLOR_RANGE = [
   [177, 0, 38, 255]
 ];
 
+async function generateCoordinates(city) {
+  const res = await fetch(`https://n6obibc9w6.execute-api.us-east-1.amazonaws.com/get-crash-regions?city=${city}`);
+  console.log("Fetch response: ", res);
+  const data = await res.json();
+  return data.features.map(feature => ({
+    COORDINATES: feature.geometry.coordinates,
+    WEIGHT: feature.properties.weight
+  }));
+}
+
 // ---- Deck.gl Overlay ----
 function DeckGLOverlay({ layers }) {
   const map = useMap();
@@ -63,7 +73,7 @@ function DeckGLOverlay({ layers }) {
   return null;
 }
 
-function MapContent({ mapCenter, camState, handleCameraChange, layers }) {
+function MapContent({ mapCenter, camState, handleCameraChange, layers}) {
   const map = useMap();
 
   useEffect(() => {
@@ -88,14 +98,19 @@ function MapContent({ mapCenter, camState, handleCameraChange, layers }) {
 // ---- Map Container ----
 function MapContainer() {
   const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
-  const { mapCenter } = useContext(MapCenterContext);
+  const { mapCenter, city } = useContext(MapCenterContext);
 
   const [camState, setCamState] = useState({
     zoom: 13,
     center: { lat: 47.6061, lng: -122.3328 }
   });
+  //console.log("City is: ", city);
 
-  const accidentData = useMemo(() => generateSeattleAccidentData(), []);
+  const [accidentData, setAccidentData] = useState([]);
+  useEffect(() => {
+    generateCoordinates(city).then(setAccidentData);
+  }, [city]);
+
   const layers = useMemo(() => {
     // Adjust radius based on zoom level for a consistent appearance
     const radiusPixels = Math.max(10, 60 - (camState.zoom - 13) * 5);

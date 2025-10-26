@@ -5,6 +5,7 @@ export const MapCenterContext = createContext();
 
 export function MapCenterProvider({ children }) {
   const [mapCenter, setMapCenter] = useState({ lat: 47.6061, lng: -122.3328 });
+  const [city, setCity] = useState('seattle');
   const [forceRefresh, setForceRefresh] = useState(false);
 
   const triggerRefresh = () => setForceRefresh(f => !f);
@@ -18,6 +19,7 @@ export function MapCenterProvider({ children }) {
         lat: parseFloat(results[0].lat),
         lng: parseFloat(results[0].lon),
       });
+      setCity(query);
       triggerRefresh();
       return true;
     }
@@ -25,7 +27,7 @@ export function MapCenterProvider({ children }) {
   };
 
   return (
-    <MapCenterContext.Provider value={{ mapCenter, setMapCenter, searchLocation, forceRefresh, triggerRefresh }}>
+    <MapCenterContext.Provider value={{ mapCenter, setMapCenter, searchLocation, city}}>
       {children}
     </MapCenterContext.Provider>
   );
