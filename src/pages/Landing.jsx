@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { MapCenterContext } from '../context/MapCenterContext';
 
 const stats = [
   { number: '7%', text: 'Increase in fatalities for every 10-minute increase in ambulance journey time.' },
@@ -10,7 +11,8 @@ const stats = [
 
 function Landing() {
   const [currentStatIndex, setCurrentStatIndex] = useState(0);
-  const [region, setRegion] = useState('');
+  const [search, setSearch] = useState('');
+  const { searchLocation } = useContext(MapCenterContext);
   const navigate = useNavigate();
 
   // Carousel auto-rotation logic
@@ -22,11 +24,12 @@ function Landing() {
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (region.trim()) {
-      // Navigate to /home and pass the region as a query parameter
-      navigate(`/home?region=${encodeURIComponent(region.trim())}`);
+    if (search.trim()) {
+      const found = await searchLocation(search);
+      setSearch('');
+      if (found) navigate('/home');
     }
   };
 
@@ -59,8 +62,8 @@ function Landing() {
           <input
             type="text"
             placeholder="Enter your city or region (e.g., 'San Francisco')"
-            value={region}
-            onChange={(e) => setRegion(e.target.value)}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             required
             aria-label="Enter your region"
           />
@@ -71,6 +74,6 @@ function Landing() {
       </section>
     </div>
   );
-}
+};
 
 export default Landing;
