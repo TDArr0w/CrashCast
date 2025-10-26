@@ -19,6 +19,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x:hidden;
 }
 
 /* ======== base styles ======== */
@@ -298,6 +299,26 @@ a {
     margin-bottom: 0;
   }
 }
+/* ... (Existing styles above) ... */
+
+/* Stats Carousel */
+.stats-carousel-section {
+  overflow: hidden;
+  margin-bottom: 20px;
+  padding: 40px 0; /* INCREASED vertical padding for better visual weight */
+  
+  /* CHANGE: Updated light background color */
+  background-color: #e9ecef;
+  
+  border-radius: 8px;
+
+  body.dark & {
+    /* CHANGE: Updated dark background color */
+    background-color: #3b3b3b;
+  }
+}
+
+/* ... (Rest of the styles below) ... */
 .page-content {
   padding: 60px 20px;
 }

@@ -2,6 +2,14 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapCenterContext } from '../context/MapCenterContext';
+import LandingCarousel from '../components/LandingCarousel';
+
+const stats = [
+  { number: '7%', text: 'Increase in fatalities for every 10-minute increase in ambulance journey time.' },
+  { number: '2.6%', text: 'Increase in crash fatality odds for every 1-minute increase in EMS response time.' },
+  { number: '$340B', text: 'Annual cost of motor vehicle crashes in the U.S. in 2019.' },
+  { number: '10s', text: 'Frequency of a car crash involving an injury in the U.S.' },
+];
 
 function Landing() {
   const [search, setSearch] = useState('');
@@ -59,6 +67,10 @@ function Landing() {
       </section>
 
       {/* Region Input Section */}
+
+      {/* end of top carousel */}
+      <LandingCarousel />
+      
       <section className="region-input-section">
         <div className="container">
           <h2>Enter Your Region</h2>
