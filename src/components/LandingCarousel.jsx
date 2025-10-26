@@ -12,28 +12,32 @@ const LandingCarousel = ({
   arcHeight = 305,
   arcOffset = 2.8,
 }) => {
-  const roadStyle = {
-    '--size': `${size}px`,
-    '--rotation-speed': `${rotationSpeed}s`,
-    '--road-thickness': `${roadThickness}px`,
-    '--stripe-width': `${stripeWidth}px`,
-    '--dash-deg': `${dashLengthDeg}deg`,
-    '--gap-deg': `${gapLengthDeg}deg`,
-  };
-
   return (
-    <div className="landing-carousel-container" style={{ height: `${arcHeight}px` }}>
-    
-      <div
-        className="landing-carousel"
-        style={{
-          transform: `translateY(${arcOffset * 100}%)`,
-        }}
-      >
-      
-        <div className="road-base" style={roadStyle}></div>
-        <div className="road-stripe" style={roadStyle}></div>
-      </div>
+    <div className="landing-carousel-container" style={{ height: `${arcHeight}px`, position: "relative" }}>
+      <svg
+  viewBox="0 6 100 30"
+  preserveAspectRatio="xMidYMid meet"
+  style={{
+    width: "100%",
+    height: "100%",
+    transform: "scale(2)",
+    overflow: "visible", 
+    transformOrigin: "top",
+  }}
+>
+        <circle cx="50" cy="50" r="40" stroke="#222" strokeWidth="10" fill="none" />
+        <circle cx="50" cy="50" r="40" stroke="white" strokeDasharray="5 4" strokeWidth="1" fill="none">
+          <animateTransform
+            attributeName="transform"
+            attributeType="XML"
+            type="rotate"
+            from="0 50 50"
+            to="360 50 50"
+            dur={`${rotationSpeed}s`}
+            repeatCount="indefinite"
+          />
+        </circle>
+      </svg>
       <LandingAmbulance />
     </div>
   );
