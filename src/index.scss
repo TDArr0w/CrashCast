@@ -1,7 +1,8 @@
 /* ======== GLOBAL VARIABLES ======== */
 :root {
   // Color palette
-  --primary-color: #007bff;
+  --primary-color: #ff6600; /* Bright Orange */
+  --secondary-color: #cc0000; /* Deep Red for contrast/darker shades */
   --danger-color: #dc3545;
   --warning-color: #ffc107;
   --success-color: #28a745;
@@ -42,9 +43,9 @@ body {
     }
 
     .btn-primary {
-      background-color: #0056b3;
+      background-color: #e65c00; /* Darker Orange for dark mode primary button */
       &:hover {
-        background-color: #004a99;
+        background-color: #b34700;
       }
     }
 
@@ -133,11 +134,11 @@ a {
   box-sizing: border-box;
 
   &.btn-primary {
-    background-color: var(--primary-color);
+    background-color: var(--primary-color); /* Orange */
     color: #fff;
 
     &:hover {
-      background-color: #0069d9;
+      background-color: #cc5200; /* Slightly darker orange */
     }
   }
 
@@ -208,7 +209,12 @@ a {
   display: block;
   font-size: 4rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: #ff4500; /* Directly set to a vibrant orange-red color */
+  /* Or use a linear gradient for an orange-to-red effect (more complex):
+  background-image: linear-gradient(to right, #ff8c00, #ff4500, #cc0000);
+  -webkit-background-clip: text;
+  color: transparent;
+  */
   margin-bottom: 10px;
 }
 
