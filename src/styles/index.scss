@@ -180,10 +180,9 @@ a {
 /* Stats Carousel */
 .stats-carousel-section {
   overflow: hidden;
-  margin-bottom: 60px;
+  bottom:5em;
   padding: 20px 0;
   background-color: var(--light-color);
-  border-radius: 8px;
   position: relative;
   
   body.dark & {
@@ -398,22 +397,7 @@ body.dark .search-bar-with-icon input[type="text"] {
 }
 /* ... (Existing styles above) ... */
 
-/* Stats Carousel */
-.stats-carousel-section {
-  overflow: hidden;
-  margin-bottom: 20px;
-  padding: 40px 0; /* INCREASED vertical padding for better visual weight */
-  
-  /* CHANGE: Updated light background color */
-  background-color: #e9ecef;
-  
-  border-radius: 8px;
 
-  body.dark & {
-    /* CHANGE: Updated dark background color */
-    background-color: #3b3b3b;
-  }
-}
 
 /* ... (Rest of the styles below) ... */
 .page-content {

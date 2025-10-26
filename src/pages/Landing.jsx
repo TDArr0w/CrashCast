@@ -68,7 +68,7 @@ function Landing() {
       <LandingCarousel />
       
       {/* Stats Carousel Section */}
-      <section className="stats-carousel-section">
+      <circle className="stats-carousel-section">
         <div className="container">
           <h2>Why Choose CrashCast?</h2>
           <div className="stats-carousel-container">
@@ -88,7 +88,7 @@ function Landing() {
             </div>
           </div>
         </div>
-      </section>
+      </circle>
     </div>
   );
 };
