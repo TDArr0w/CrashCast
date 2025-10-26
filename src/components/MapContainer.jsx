@@ -1,8 +1,11 @@
 import React, { useState, useCallback, useMemo, useEffect, useContext, Children } from 'react';
 import { HeatmapLayer } from '@deck.gl/aggregation-layers';
-import { APIProvider, Map, useMap } from '@vis.gl/react-google-maps';
+import { APIProvider, Map, useMap, AdvancedMarker } from '@vis.gl/react-google-maps';
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
 import { MapCenterContext } from '../context/MapCenterContext';
+import { findBestAverageLocations } from '../Utils/bestAverageLocations';
+import  ambulanceIcon from '../assets/ambulanceslide.png';
+import hospitalIcon from '../assets/hospital.png';
 
 // ---- Fake Accident Data ----
 const generateSeattleAccidentData = () => {
@@ -46,13 +49,47 @@ const COLOR_RANGE = [
 
 async function generateCoordinates(city) {
   const res = await fetch(`https://n6obibc9w6.execute-api.us-east-1.amazonaws.com/get-crash-regions?city=${city}`);
-  console.log("Fetch response: ", res);
+  console.log(" accident Fetch response: ", res);
   const data = await res.json();
   return data.features.map(feature => ({
     COORDINATES: feature.geometry.coordinates,
     WEIGHT: feature.properties.weight
   }));
 }
+
+async function findEMTS(city) {
+  const res = await fetch(`https://n6obibc9w6.execute-api.us-east-1.amazonaws.com/get-crash-regions?city=${city}`);
+  if (!res.ok) {
+    console.error("Failed to fetch EMT data:", res.status);
+    return [];
+  }
+  const data = await res.json();
+  console.log("EMT Fetch response: ", data);
+
+  // Parse hospital coordinates as { lat, lng }
+  if (
+    data &&
+    data.essential_buildings &&
+    data.essential_buildings.hospitals &&
+    data.essential_buildings.hospitals.features
+  ) {
+    return data.essential_buildings.hospitals.features.map(feature => {
+      const [lng, lat] = feature.geometry.coordinates;
+      return { lat, lng };
+    });
+  }
+  return [];
+}
+/*
+async function findTravel(loc1, loc2) {
+  const origin = `${loc1.lat},${loc1.lng}`;
+  const destination = `${loc2.lat},${loc2.lng}`;
+  const res = await fetch(`http://localhost:3001/distance?origin=${origin}&destination=${destination}`);
+  const data = await res.json();
+  console.log("Distance Matrix Data: ", data);
+  return data;
+}
+  */
 
 // ---- Deck.gl Overlay ----
 function DeckGLOverlay({ layers }) {
@@ -73,7 +110,7 @@ function DeckGLOverlay({ layers }) {
   return null;
 }
 
-function MapContent({ mapCenter, camState, handleCameraChange, layers}) {
+function MapContent({ mapCenter, camState, handleCameraChange, layers, ambulances, EMTStations = []}) {
   const map = useMap();
 
   useEffect(() => {
@@ -91,6 +128,32 @@ function MapContent({ mapCenter, camState, handleCameraChange, layers}) {
       onCameraChanged={handleCameraChange}
     >
       <DeckGLOverlay layers={layers} />
+      {ambulances.map((point, index) => (
+        <AdvancedMarker key={index} position={{ lat: point.lat, lng: point.lng }}>
+          <img
+            src={ambulanceIcon}
+            alt="Custom Marker"
+            style={{
+              width: 32,
+              height: 32,
+              objectFit: 'contain'
+            }}
+          />
+        </AdvancedMarker>
+      ))}
+      {EMTStations.map((point, index) => (
+        <AdvancedMarker key={index} position={{ lat: point.lat, lng: point.lng }}>
+          <img
+            src={hospitalIcon}
+            alt="Custom Marker"
+            style={{
+              width: 32,
+              height: 32,
+              objectFit: 'contain'
+            }}
+          />
+        </AdvancedMarker>
+      ))}
     </Map>
   );
 }
@@ -110,6 +173,31 @@ function MapContainer() {
   useEffect(() => {
     generateCoordinates(city).then(setAccidentData);
   }, [city]);
+  //console.log("Accident Data: ", accidentData[0]);
+
+  const [emtLocations, setEmtLocations] = useState([]);
+  useEffect(() => {
+    findEMTS(city).then(setEmtLocations);
+  }, [city]);
+  //console.log("EMT Locations: ", emtLocations[0]);
+
+  const [idealLocations, setIdealLocations] = useState([]);
+  useEffect(() => {
+    const locations = findBestAverageLocations(accidentData, emtLocations.length);
+    setIdealLocations(locations);
+  }, [accidentData]);
+
+  //console.log("Ideal Locations: ", idealLocations[0]);
+  /*const [travel, setTravel] = useState(null);
+
+  useEffect(() => {
+    if (idealLocations.length >= 2) {
+      findTravel(idealLocations[0], idealLocations[1])
+        .then(setTravel)
+        .catch(err => console.error("Distance fetch error:", err));
+    }
+  }, [idealLocations]);
+  */
 
   const layers = useMemo(() => {
     // Adjust radius based on zoom level for a consistent appearance
@@ -150,6 +238,8 @@ function MapContainer() {
             camState={camState}
             handleCameraChange={handleCameraChange}
             layers={layers}
+            ambulances={idealLocations}
+            EMTStations={emtLocations}
           />
           {/* Legend UI */}
           <div
