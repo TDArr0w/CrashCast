@@ -1,7 +1,6 @@
 import React from 'react';
 import '../styles/LandingCarousel.css';
 
-
 const LandingCarousel = ({
   size = 3500,
   rotationSpeed = 35,
@@ -23,6 +22,7 @@ const LandingCarousel = ({
 
   return (
     <div className="landing-carousel-container" style={{ height: `${arcHeight}px` }}>
+
       <div
         className="landing-carousel"
         style={{
