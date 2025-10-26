@@ -314,6 +314,9 @@
   color: var(--light-color);
   padding: 30px 0;
   margin-top: 40px;
+  position: absolute;
+  width: 100%;
+  bottom:0;
 }
 
 .site-footer .container {
