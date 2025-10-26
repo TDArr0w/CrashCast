@@ -38,7 +38,6 @@ const LandingCarousel = ({
     <div className="landing-carousel-container" style={{ height: `${arcHeight}px`, position: "relative" }}>
       
       {/* 1. STATS COMPONENT (z-index: 1) */}
-      <StatsCarouselPlaceholder />
 
       {/* 2. PROMINENT WELCOME MESSAGE (z-index: 3) */}
       <div style={{
