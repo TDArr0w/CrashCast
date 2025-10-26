@@ -1,4 +1,5 @@
 import React from 'react';
+import '../styles/About.css';
 
 function About() {
   const stats = [
@@ -39,13 +40,13 @@ function About() {
 
       {/* Stats & Impact */}
       <h2>Our Impact</h2>
-      <p>
+      <p >
         Every number tells a story of faster response times and lives potentially saved:
       </p>
       <div className="stats-carousel-section">
-        <div className="stats-carousel-container">
+        <div className="stats-carousel-container" >
           {stats.map((stat, index) => (
-            <div className="stat-box" key={index}>
+            <div className="stat-box" key={index} style={{marginLeft: "20px", marginRight: "20px"}}>
               <span className="stat-number">{stat.number}</span>
               <p className="stat-text">{stat.text}</p>
             </div>
