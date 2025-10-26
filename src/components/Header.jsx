@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { DarkModeToggle } from './DarkToggle';
-import logo from '../assets/CrashCast-Text.png';
+import logo from '../assets/CrashCast-TextRed.png';
 
 function Header() {
   return (
