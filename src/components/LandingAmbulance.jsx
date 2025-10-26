@@ -39,7 +39,7 @@ function LandingAmbulance() {
         transform: "scale(0.5)",
         left: "50%",
         top: "50%",
-        transform: "translate(-400%, -420%) scale(0.5)",
+        transform: "translate(-420%, -420%) scale(0.5)",
         transformOrigin: "center"
       }}
     >
