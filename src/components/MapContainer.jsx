@@ -48,7 +48,7 @@ const COLOR_RANGE = [
 ];
 
 async function generateCoordinates(city) {
-  const res = await fetch(`https://n6obibc9w6.execute-api.us-east-1.amazonaws.com/get-crash-regions?city=${city}`);
+  const res = await fetch(`http://localhost:8000/risk?city=${city}`);
   console.log(" accident Fetch response: ", res);
   const data = await res.json();
   return data.crash_regions.features.map(feature => ({
@@ -58,7 +58,7 @@ async function generateCoordinates(city) {
 }
 
 async function findEMTS(city) {
-  const res = await fetch(`https://n6obibc9w6.execute-api.us-east-1.amazonaws.com/get-crash-regions?city=${city}`);
+  const res = await fetch(`http://localhost:8000/risk?city=${city}`);
   if (!res.ok) {
     console.error("Failed to fetch EMT data:", res.status);
     return [];
