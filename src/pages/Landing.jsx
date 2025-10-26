@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+// pages/Landing.jsx
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { MapCenterContext } from '../context/MapCenterContext';
 import LandingCarousel from '../components/LandingCarousel';
 
 const stats = [
@@ -10,68 +12,79 @@ const stats = [
 ];
 
 function Landing() {
-  const [currentStatIndex, setCurrentStatIndex] = useState(0);
-  const [region, setRegion] = useState('');
+  const [search, setSearch] = useState('');
+  const { setMapCenter } = useContext(MapCenterContext);
   const navigate = useNavigate();
 
-  // Carousel auto-rotation logic
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentStatIndex((prevIndex) => (prevIndex + 1) % stats.length);
-    }, 5000); // Change stat every 5 seconds (5000ms)
-
-    return () => clearInterval(interval); // Cleanup interval on component unmount
-  }, []);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (region.trim()) {
-      // Navigate to /home and pass the region as a query parameter
-      navigate(`/home?region=${encodeURIComponent(region.trim())}`);
+    if (search.trim()) {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(search)}`);
+      const results = await response.json();
+      if (results[0]) {
+        setMapCenter({
+          lat: parseFloat(results[0].lat),
+          lng: parseFloat(results[0].lon),
+        });
+        setSearch('');
+        navigate('/home');
+      } else {
+        alert('Location not found. Please try a different search term.');
+      }
     }
   };
 
   return (
     <div className="landing-page">
       <section className="hero-section">
-        <h1>Predictive Dispatch for Life-Saving Response.</h1>
-        <p className="subtitle">
-          Turn a 10-minute response into a 2-minute advantage. CrashCast uses predictive modeling to pre-position resources,
-          saving lives and valuable time.
-        </p>
+        <div className="container">
+          <h1>Welcome to CrashCast</h1>
+          <p className="subtitle">Real-time traffic accident prediction and emergency resource monitoring</p>
+        </div>
       </section>
-{/* This is the carousel yeah yeah */}
+
+      {/* Stats Carousel Section */}
       <section className="stats-carousel-section">
-        <div className="stats-carousel-container">
-          <div className="stats-carousel-track" style={{ transform: `translateX(-${currentStatIndex * 100}%)` }}>
-            {stats.map((stat, index) => (
-              <div key={index} className="stat-box">
-                <span className="stat-number">{stat.number}</span>
-                <p className="stat-text">{stat.text}</p>
+        <div className="container">
+          <h2>Why Choose CrashCast?</h2>
+          <div className="stats-carousel-container">
+            <div className="stats-carousel-track">
+              <div className="stat-box">
+                <span className="stat-number">30%</span>
+                <p className="stat-text">Reduction in emergency response time through predictive analytics</p>
               </div>
-            ))}
+              <div className="stat-box">
+                <span className="stat-number">24/7</span>
+                <p className="stat-text">Real-time monitoring of traffic incidents and emergency resources</p>
+              </div>
+              <div className="stat-box">
+                <span className="stat-number">500+</span>
+                <p className="stat-text">Lives saved annually through early accident detection and rapid response</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* Region Input Section */}
 
       {/* end of top carousel */}
       <LandingCarousel />
       
       <section className="region-input-section">
-        <h2>See Your Region’s Potential</h2>
-        <form onSubmit={handleSubmit} className="region-form">
-          <input
-            type="text"
-            placeholder="Enter your city or region (e.g., 'San Francisco')"
-            value={region}
-            onChange={(e) => setRegion(e.target.value)}
-            required
-            aria-label="Enter your region"
-          />
-          <button type="submit" className="btn btn-primary">
-            Analyze Now
-          </button>
-        </form>
+        <div className="container">
+          <h2>Enter Your Region</h2>
+          <form className="region-form" onSubmit={handleSubmit}>
+            <input 
+              type="text" 
+              placeholder="Search for a city or address..." 
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              required
+            />
+            <button type="submit" className="btn btn-primary">Get Started</button>
+          </form>
+        </div>
       </section>
     </div>
   );
