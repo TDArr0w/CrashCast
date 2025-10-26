@@ -36,25 +36,39 @@ function Landing() {
   return (
     <div className="landing-page">
       <section className="hero-section">
-        <h1>Predictive Dispatch for Life-Saving Response.</h1>
-        <p className="subtitle">
-          Turn a 10-minute response into a 2-minute advantage. CrashCast uses predictive modeling to pre-position resources,
-          saving lives and valuable time.
-        </p>
+        <div className="container">
+          <h1>Welcome to CrashCast</h1>
+          <p className="subtitle">Real-time traffic accident prediction and emergency resource monitoring</p>
+        </div>
       </section>
 
+      {/* Stats Carousel Section */}
       <section className="stats-carousel-section">
-        <div className="stats-carousel-container">
-          <div className="stats-carousel-track" style={{ transform: `translateX(-${currentStatIndex * 100}%)` }}>
-            {stats.map((stat, index) => (
-              <div key={index} className="stat-box">
-                <span className="stat-number">{stat.number}</span>
-                <p className="stat-text">{stat.text}</p>
+        <div className="container">
+          <h2>Why Choose CrashCast?</h2>
+          <div className="stats-carousel-container">
+            <div className="stats-carousel-track">
+              <div className="stat-box">
+                <span className="stat-number">30%</span>
+                <p className="stat-text">Reduction in emergency response time through predictive analytics</p>
               </div>
-            ))}
+              <div className="stat-box">
+                <span className="stat-number">24/7</span>
+                <p className="stat-text">Real-time monitoring of traffic incidents and emergency resources</p>
+              </div>
+              <div className="stat-box">
+                <span className="stat-number">500+</span>
+                <p className="stat-text">Lives saved annually through early accident detection and rapid response</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* Region Input Section */}
+
+      {/* end of top carousel */}
+      <LandingCarousel />
       
       <section className="region-input-section">
         <h2>See Your Region’s Potential</h2>

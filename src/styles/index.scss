@@ -19,6 +19,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x:hidden;
 }
 
 /* ======== base styles ======== */
@@ -183,6 +184,7 @@ a {
   padding: 20px 0;
   background-color: var(--light-color);
   border-radius: 8px;
+  position: relative;
 
   body.dark & {
     background-color: #3b3b3b;
@@ -192,29 +194,33 @@ a {
 .stats-carousel-container {
   display: flex;
   width: 100%;
+  overflow: hidden;
+  position: relative;
+  height: 200px; /* Fixed height to prevent layout shift */
 }
 
 .stats-carousel-track {
   display: flex;
-  transition: transform 0.5s ease-in-out;
+  width: 300%; /* 3 items = 300% */
+  animation: simple-carousel 15s infinite ease-in-out;
 }
 
 .stat-box {
-  min-width: 100%; // Each box takes up the full container width
+  min-width: 100%; /* Each box takes full width of container */
   padding: 20px;
   box-sizing: border-box;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .stat-number {
   display: block;
   font-size: 4rem;
   font-weight: 700;
-  color: #ff4500; /* Directly set to a vibrant orange-red color */
-  /* Or use a linear gradient for an orange-to-red effect (more complex):
-  background-image: linear-gradient(to right, #ff8c00, #ff4500, #cc0000);
-  -webkit-background-clip: text;
-  color: transparent;
-  */
+  color: #ff4500;
   margin-bottom: 10px;
 }
 
@@ -222,6 +228,36 @@ a {
   font-size: 1.25rem;
   max-width: 600px;
   margin: 0 auto;
+}
+
+@keyframes simple-carousel {
+  0%, 25% {
+    transform: translateX(0); /* First stat visible */
+  }
+  33.333%, 58.333% {
+    transform: translateX(-100%); /* Second stat visible */
+  }
+  66.666%, 91.666% {
+    transform: translateX(-200%); /* Third stat visible */
+  }
+  100% {
+    transform: translateX(0); /* Back to first */
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .stats-carousel-container {
+    height: 180px;
+  }
+
+  .stat-number {
+    font-size: 3rem;
+  }
+
+  .stat-text {
+    font-size: 1.1rem;
+  }
 }
 
 /* Region Input Form */
@@ -263,6 +299,26 @@ a {
     margin-bottom: 0;
   }
 }
+/* ... (Existing styles above) ... */
+
+/* Stats Carousel */
+.stats-carousel-section {
+  overflow: hidden;
+  margin-bottom: 20px;
+  padding: 40px 0; /* INCREASED vertical padding for better visual weight */
+  
+  /* CHANGE: Updated light background color */
+  background-color: #e9ecef;
+  
+  border-radius: 8px;
+
+  body.dark & {
+    /* CHANGE: Updated dark background color */
+    background-color: #3b3b3b;
+  }
+}
+
+/* ... (Rest of the styles below) ... */
 .page-content {
   padding: 60px 20px;
 }

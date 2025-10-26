@@ -1,3 +1,4 @@
+// context/MapCenterContext.jsx
 import React, { createContext, useState } from 'react';
 
 export const MapCenterContext = createContext();
@@ -28,4 +29,4 @@ export function MapCenterProvider({ children }) {
       {children}
     </MapCenterContext.Provider>
   );
-}
+};
