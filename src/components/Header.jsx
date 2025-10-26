@@ -8,7 +8,10 @@ function Header() {
     <header className="site-header">
       <div className="container header-content">
         <div className="logo">
-          <img src={logo} alt="CrashCast Logo" className="logo-img" />
+          {/* CHANGE: Link to root path ("/") */}
+          <Link to="/">
+            <img src={logo} alt="CrashCast Logo" className="logo-img" />
+          </Link>
         </div>
         <nav className="main-nav">
           <ul>
