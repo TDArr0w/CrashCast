@@ -1,102 +1,167 @@
-import React, { useState, useCallback} from 'react';
-import {APIProvider, Map} from '@vis.gl/react-google-maps';
-import {DeckGL} from '@deck.gl/react';
+import React, { useState, useCallback, useMemo, useEffect} from 'react';
+//import {APIProvider, Map} from '@vis.gl/react-google-maps';
+//import {DeckGL} from '@deck.gl/react';
 import {HeatmapLayer} from '@deck.gl/aggregation-layers';
+import {APIProvider, Map, useMap} from '@vis.gl/react-google-maps';
+//import {DeckProps} from '@deck.gl/core';
+//import {ScatterplotLayer} from '@deck.gl/layers';
+import {GoogleMapsOverlay} from '@deck.gl/google-maps';
 
 // Generate fake accident data for Seattle
 const generateSeattleAccidentData = () => {
-  const data = [];
-  
-  // Seattle high-risk areas (major intersections, highways, downtown)
-  const hotspots = [
-    // Downtown Seattle
-    { lat: 47.6062, lng: -122.3321, intensity: 0.9 },
-    { lat: 47.6097, lng: -122.3331, intensity: 0.8 },
-    { lat: 47.6089, lng: -122.3356, intensity: 0.85 },
-    
+  return [
+    // Downtown Seattle cluster
+    { COORDINATES: [-122.3321, 47.6062], WEIGHT: 0.9 },
+    { COORDINATES: [-122.3315, 47.6058], WEIGHT: 0.8 },
+    { COORDINATES: [-122.3327, 47.6065], WEIGHT: 0.7 },
+    { COORDINATES: [-122.3331, 47.6097], WEIGHT: 0.8 },
+    { COORDINATES: [-122.3325, 47.6102], WEIGHT: 0.6 },
+    { COORDINATES: [-122.3337, 47.6092], WEIGHT: 0.7 },
+    { COORDINATES: [-122.3356, 47.6089], WEIGHT: 0.85 },
+    { COORDINATES: [-122.3362, 47.6084], WEIGHT: 0.75 },
+    { COORDINATES: [-122.3350, 47.6094], WEIGHT: 0.65 },
+    { COORDINATES: [-122.3340, 47.6070], WEIGHT: 0.8 },
+    { COORDINATES: [-122.3310, 47.6080], WEIGHT: 0.7 },
+    { COORDINATES: [-122.3345, 47.6055], WEIGHT: 0.6 },
+
     // I-5 corridor
-    { lat: 47.6205, lng: -122.3493, intensity: 0.7 },
-    { lat: 47.6398, lng: -122.3421, intensity: 0.75 },
-    { lat: 47.6587, lng: -122.3245, intensity: 0.8 },
-    
+    { COORDINATES: [-122.3493, 47.6205], WEIGHT: 0.7 },
+    { COORDINATES: [-122.3498, 47.6210], WEIGHT: 0.65 },
+    { COORDINATES: [-122.3488, 47.6200], WEIGHT: 0.8 },
+    { COORDINATES: [-122.3421, 47.6398], WEIGHT: 0.75 },
+    { COORDINATES: [-122.3415, 47.6405], WEIGHT: 0.7 },
+    { COORDINATES: [-122.3427, 47.6392], WEIGHT: 0.6 },
+    { COORDINATES: [-122.3245, 47.6587], WEIGHT: 0.8 },
+    { COORDINATES: [-122.3250, 47.6580], WEIGHT: 0.75 },
+    { COORDINATES: [-122.3240, 47.6594], WEIGHT: 0.7 },
+    { COORDINATES: [-122.3255, 47.6575], WEIGHT: 0.65 },
+
     // Capitol Hill
-    { lat: 47.6205, lng: -122.3212, intensity: 0.6 },
-    { lat: 47.6243, lng: -122.3167, intensity: 0.65 },
-    
+    { COORDINATES: [-122.3212, 47.6205], WEIGHT: 0.6 },
+    { COORDINATES: [-122.3218, 47.6200], WEIGHT: 0.55 },
+    { COORDINATES: [-122.3206, 47.6210], WEIGHT: 0.65 },
+    { COORDINATES: [-122.3167, 47.6243], WEIGHT: 0.65 },
+    { COORDINATES: [-122.3172, 47.6238], WEIGHT: 0.6 },
+    { COORDINATES: [-122.3162, 47.6248], WEIGHT: 0.7 },
+    { COORDINATES: [-122.3180, 47.6235], WEIGHT: 0.55 },
+    { COORDINATES: [-122.3155, 47.6250], WEIGHT: 0.6 },
+
     // Ballard
-    { lat: 47.6685, lng: -122.3834, intensity: 0.7 },
-    
+    { COORDINATES: [-122.3834, 47.6685], WEIGHT: 0.7 },
+    { COORDINATES: [-122.3840, 47.6680], WEIGHT: 0.65 },
+    { COORDINATES: [-122.3828, 47.6690], WEIGHT: 0.75 },
+    { COORDINATES: [-122.3845, 47.6675], WEIGHT: 0.6 },
+    { COORDINATES: [-122.3822, 47.6695], WEIGHT: 0.7 },
+    { COORDINATES: [-122.3850, 47.6670], WEIGHT: 0.55 },
+
     // University District
-    { lat: 47.6587, lng: -122.3123, intensity: 0.6 },
-    
+    { COORDINATES: [-122.3123, 47.6587], WEIGHT: 0.6 },
+    { COORDINATES: [-122.3118, 47.6582], WEIGHT: 0.65 },
+    { COORDINATES: [-122.3128, 47.6592], WEIGHT: 0.55 },
+    { COORDINATES: [-122.3115, 47.6595], WEIGHT: 0.7 },
+    { COORDINATES: [-122.3130, 47.6580], WEIGHT: 0.6 },
+    { COORDINATES: [-122.3110, 47.6590], WEIGHT: 0.5 },
+
     // West Seattle
-    { lat: 47.5704, lng: -122.3861, intensity: 0.6 },
+    { COORDINATES: [-122.3861, 47.5704], WEIGHT: 0.6 },
+    { COORDINATES: [-122.3868, 47.5698], WEIGHT: 0.55 },
+    { COORDINATES: [-122.3854, 47.5710], WEIGHT: 0.65 },
+    { COORDINATES: [-122.3875, 47.5692], WEIGHT: 0.5 },
+    { COORDINATES: [-122.3847, 47.5715], WEIGHT: 0.7 },
+
+    // Highway 99
+    { COORDINATES: [-122.3567, 47.6789], WEIGHT: 0.75 },
+    { COORDINATES: [-122.3572, 47.6784], WEIGHT: 0.7 },
+    { COORDINATES: [-122.3562, 47.6794], WEIGHT: 0.8 },
+    { COORDINATES: [-122.3498, 47.6234], WEIGHT: 0.8 },
+    { COORDINATES: [-122.3503, 47.6229], WEIGHT: 0.75 },
+    { COORDINATES: [-122.3493, 47.6239], WEIGHT: 0.85 },
+
+    // Georgetown/SODO
+    { COORDINATES: [-122.3234, 47.5789], WEIGHT: 0.7 },
+    { COORDINATES: [-122.3240, 47.5784], WEIGHT: 0.65 },
+    { COORDINATES: [-122.3228, 47.5794], WEIGHT: 0.75 },
+    { COORDINATES: [-122.3287, 47.5845], WEIGHT: 0.65 },
+    { COORDINATES: [-122.3292, 47.5840], WEIGHT: 0.6 },
+    { COORDINATES: [-122.3282, 47.5850], WEIGHT: 0.7 },
+
+    // Additional scattered points
+    { COORDINATES: [-122.3456, 47.6123], WEIGHT: 0.4 },
+    { COORDINATES: [-122.3012, 47.6345], WEIGHT: 0.3 },
+    { COORDINATES: [-122.3789, 47.6456], WEIGHT: 0.5 },
+    { COORDINATES: [-122.3234, 47.6789], WEIGHT: 0.35 },
+    { COORDINATES: [-122.3567, 47.5234], WEIGHT: 0.45 },
+    { COORDINATES: [-122.3890, 47.6012], WEIGHT: 0.4 },
+    { COORDINATES: [-122.3123, 47.6678], WEIGHT: 0.3 },
+    { COORDINATES: [-122.3445, 47.5789], WEIGHT: 0.5 },
+    { COORDINATES: [-122.3678, 47.6234], WEIGHT: 0.35 },
+    { COORDINATES: [-122.3012, 47.5890], WEIGHT: 0.4 },
+    { COORDINATES: [-122.3789, 47.6567], WEIGHT: 0.45 },
+    { COORDINATES: [-122.3234, 47.5678], WEIGHT: 0.3 },
+    { COORDINATES: [-122.3567, 47.6890], WEIGHT: 0.5 },
+    { COORDINATES: [-122.3890, 47.5234], WEIGHT: 0.35 },
+    { COORDINATES: [-122.3123, 47.6345], WEIGHT: 0.4 },
+    { COORDINATES: [-122.3445, 47.5567], WEIGHT: 0.45 },
+    { COORDINATES: [-122.3678, 47.6789], WEIGHT: 0.3 },
+    { COORDINATES: [-122.3012, 47.5234], WEIGHT: 0.5 },
+    { COORDINATES: [-122.3789, 47.6012], WEIGHT: 0.35 },
+    { COORDINATES: [-122.3234, 47.5890], WEIGHT: 0.4 },
+    { COORDINATES: [-122.3567, 47.6567], WEIGHT: 0.45 },
+    { COORDINATES: [-122.3890, 47.5678], WEIGHT: 0.3 },
+    { COORDINATES: [-122.3123, 47.6890], WEIGHT: 0.5 },
+    { COORDINATES: [-122.3445, 47.5234], WEIGHT: 0.35 },
+    { COORDINATES: [-122.3678, 47.6345], WEIGHT: 0.4 },
+    { COORDINATES: [-122.3012, 47.5567], WEIGHT: 0.45 },
+    { COORDINATES: [-122.3789, 47.6789], WEIGHT: 0.3 },
+    { COORDINATES: [-122.3234, 47.5234], WEIGHT: 0.5 }
   ];
-
-  // Generate data points around hotspots
-  hotspots.forEach(hotspot => {
-    const numPoints = Math.floor(hotspot.intensity * 30) + 15;
-    
-    for (let i = 0; i < numPoints; i++) {
-      const radius = Math.random() * 0.008; // ~800m radius
-      const angle = Math.random() * 2 * Math.PI;
-      
-      const lat = hotspot.lat + radius * Math.cos(angle);
-      const lng = hotspot.lng + radius * Math.sin(angle);
-      
-      data.push({
-        COORDINATES: [lng, lat],
-        WEIGHT: Math.random() * hotspot.intensity + 0.1
-      });
-    }
-  });
-
-  // Add scattered random points
-  for (let i = 0; i < 100; i++) {
-    const lat = 47.4814 + Math.random() * (47.7341 - 47.4814);
-    const lng = -122.4594 + Math.random() * (-122.2244 - (-122.4594));
-    
-    data.push({
-      COORDINATES: [lng, lat],
-      WEIGHT: Math.random() * 0.3
-    });
-  }
-
   return data;
 };
 
+const COLOR_RANGE = [
+  [255, 255, 204, 0],
+  [255, 237, 160, 80],
+  [254, 217, 118, 120],
+  [254, 178, 76, 160],
+  [253, 141, 60, 200],
+  [252, 78, 42, 240],
+  [227, 26, 28, 255],
+  [177, 0, 38, 255]
+];
+
+// Deck.gl overlay bound to the current Google Map
+function DeckGLOverlay({layers}) {
+  const map = useMap();
+  const overlay = useMemo(() => new GoogleMapsOverlay({layers}), []);
+
+  useEffect(() => {
+    if (!map) return;
+    overlay.setMap(map);
+    return () => overlay.setMap(null);
+  }, [map, overlay]);
+
+  useEffect(() => {
+    overlay.setProps({layers});
+  }, [overlay, layers]);
+
+  return null;
+}
 
 function MapContainer() {
   const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
-  //console.log('Using Google Maps API Key:', apiKey || 'No API Key Found');
-  const accidentData = generateSeattleAccidentData();
+  const mapId = import.meta.env.VITE_GOOGLE_MAP_ID;
 
-  //shared view state between DeckGL and Google Maps
-  const [viewState, setViewState] = useState({
-    longitude: -122.3328,
-    latitude: 47.6061,
-    zoom: 13,
-    pitch: 0,
-    bearing: 0  
-  })
+   if (!mapId) {
+    // WebGLOverlayView requires a vector basemap (Map ID). Without it, the overlay may not render.
+    // Create a Web map ID in Google Cloud Console and set VITE_GOOGLE_MAP_ID.
+    console.warn('No VITE_GOOGLE_MAP_ID set. Use a vector map ID for deck.gl overlay.');
+  }
 
-  const onCameraChanged = useCallback((ev) => {
-    const {center, zoom, pitch, bearing} = ev.detail;
-    setViewState(prevState => ({
-      ...prevState,
-      longitude: center.lng,
-      latitude: center.lat,
-      zoom,
-      pitch,
-      bearing
-    }) );
-  }, []);
+  const accidentData = useMemo(() => generateSeattleAccidentData(), []);
 
-  const onViewStateChange = useCallback(({viewState: newViewState}) => {
-    setViewState(newViewState);
-  }, []);
 
-  const heatmapLayer = new HeatmapLayer({
+  const layers = useMemo(() => ([
+    new HeatmapLayer({
     id: 'accident-heatmap',
     data: accidentData,
     getPosition: d => d.COORDINATES,
@@ -104,41 +169,24 @@ function MapContainer() {
     radiusPixels: 60,
     intensity: 1,
     threshold: 0.05,
-    colorRange: [
-      [255, 255, 204, 0],     // Transparent yellow
-      [255, 237, 160, 80],    // Light yellow
-      [254, 217, 118, 120],   // Yellow
-      [254, 178, 76, 160],    // Orange
-      [253, 141, 60, 200],    // Dark orange
-      [252, 78, 42, 240],     // Red orange
-      [227, 26, 28, 255],     // Red
-      [177, 0, 38, 255]       // Dark red
-    ]
-  });
+    colorRange: COLOR_RANGE,
+    //gpuAggregation: false,
+    //pickable: false
+  })
+  ]), [accidentData]);
+
   return (
     <APIProvider apiKey={apiKey} onLoad={() => console.log('Maps API has loaded.')}>
       <section className="map-container">
         <h2>Live Traffic & Incident Map</h2>
         <div id="map-placeholder" style={{ height: '500px', width: '100%', position: 'relative' }}>
           <Map
-            zoom={viewState.zoom}
-            center={ { lat: viewState.latitude, lng: viewState.longitude } }
-            onCameraChanged={ onCameraChanged }
-            style ={{ height: '100%', width: '100%' }}>
-            <DeckGL
-              viewState={viewState}
-              onViewStateChange={ onViewStateChange }
-              layers={[heatmapLayer]}
-              style={{ 
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                pointerEvents: 'none',
-                width: '100%',
-                height: '100%'
-              }}
-              getCursor={() => 'grab'}
-              />
+            defaultZoom={13}
+            defaultCenter={{lat: 47.6061, lng: -122.3328}}
+            mapId={mapId}
+            style={{ height: '100%', width: '100%' }}
+            >
+              <DeckGLOverlay layers={[layers]} />
           </Map>
 
           <div style={{
