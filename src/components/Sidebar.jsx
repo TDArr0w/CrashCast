@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 const ambulanceData = [
   { id: 'AMB 147', status: 'Available - Station 3', type: 'available' },
   { id: 'AMB 088', status: 'En Route - Incident I-5 (ETA 5 min)', type: 'en-route' },
@@ -8,11 +7,11 @@ const ambulanceData = [
   { id: 'AMB 102', status: 'Available - Station 1', type: 'available' },
 ];
 
-
 function AmbulanceItem({ id, status, type }) {
+  const isPulsing = type === 'at-scene' || type === 'en-route';
   return (
     <div className="ambulance-item">
-      <span className={`status-dot ${type}`}></span>
+      <span className={`status-dot ${type} ${isPulsing ? 'pulse' : ''}`}></span>
       <div className="ambulance-info">
         <strong>{id}</strong>
         <p>{status}</p>
@@ -24,17 +23,17 @@ function AmbulanceItem({ id, status, type }) {
 function Sidebar() {
   return (
     <aside className="sidebar">
-      <h2 style = {{ marginTop: '2rem' }}>Emergency Resources Status</h2>
-      
+      <h2 style={{ marginTop: '2rem' }}>Emergency Resources Status</h2>
+
       <div className="sidebar-widget">
         <h3>Available Ambulances</h3>
         <div className="ambulance-list">
           {ambulanceData.map((amb) => (
-            <AmbulanceItem 
-              key={amb.id} 
-              id={amb.id} 
-              status={amb.status} 
-              type={amb.type} 
+            <AmbulanceItem
+              key={amb.id}
+              id={amb.id}
+              status={amb.status}
+              type={amb.type}
             />
           ))}
         </div>

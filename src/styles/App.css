@@ -175,7 +175,7 @@
 .ambulance-item {
   display: flex;
   align-items: center;
-  padding: 12px 0;
+  padding: 12px 4px;
   border-bottom: 1px solid var(--border-color);
 }
 .ambulance-item:last-child {
@@ -204,6 +204,26 @@
 }
 .status-dot.at-scene {
   background-color: var(--danger-color);
+}
+
+.pulse {
+  animation: pulse 1.5s infinite;
+}
+
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* Quick Links */
