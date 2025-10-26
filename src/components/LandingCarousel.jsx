@@ -1,6 +1,7 @@
 import React from 'react';
 import '../styles/LandingCarousel.css';
 
+
 const LandingCarousel = ({
   size = 3500,
   rotationSpeed = 35,
@@ -9,7 +10,7 @@ const LandingCarousel = ({
   dashLengthDeg = 10,
   gapLengthDeg = 16,
   arcHeight = 305,
-  arcOffset = 2.8, // controls how much the road lifts up
+  arcOffset = 2.8,
 }) => {
   const roadStyle = {
     '--size': `${size}px`,
@@ -25,7 +26,7 @@ const LandingCarousel = ({
       <div
         className="landing-carousel"
         style={{
-          transform: `translateY(${arcOffset * 100}%)`, // cahge this shit
+          transform: `translateY(${arcOffset * 100}%)`,
         }}
       >
         <div className="road-base" style={roadStyle}></div>
