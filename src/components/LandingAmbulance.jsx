@@ -9,14 +9,19 @@ import LandingCarousel from "./LandingCarousel";
 // Ambulance body (updated to bounce up and down)
 // Wheels front. pretty simple
 function LandingAmbulance() {
-  const [isBouncing, setIsBouncing] = useState(false);
+  const [yOffset, setYOffset] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIsBouncing((prev) => !prev);
-    }, 1000); // Toggle every 1 second
-
-    return () => clearInterval(interval);
+    let start = null;
+    const amplitude = 5; // pixels of bounce height
+    const speed = 0.005; // controls bounce speed
+    const animate = (timestamp) => {
+      if (!start) start = timestamp;
+      const progress = timestamp - start;
+      setYOffset(Math.sin(progress * speed) * amplitude);
+      requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
   }, []);
 
   return (
@@ -47,8 +52,8 @@ function LandingAmbulance() {
       <img
         src={AmbulanceBody}
         alt="Ambulance Body"
-        className={`ambulance-body ${isBouncing ? "bounce" : ""}`}
-        style={{ position: "absolute", top: 0, left: 0 }}
+        className="ambulance-body"
+        style={{ position: "absolute", top: `${yOffset}px`, left: 0 }}
       />
       <img
         src={WheelsFront}
