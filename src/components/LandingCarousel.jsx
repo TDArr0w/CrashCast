@@ -23,6 +23,7 @@ const LandingCarousel = ({
     transform: "scale(2)",
     overflow: "visible", 
     transformOrigin: "top",
+    zIndex: "-999",
   }}
 >
         <circle cx="50" cy="50" r="40" stroke="#222" strokeWidth="10" fill="none" />
