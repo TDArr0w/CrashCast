@@ -24,7 +24,7 @@ function AmbulanceItem({ id, status, type }) {
 function Sidebar() {
   return (
     <aside className="sidebar">
-      <h2>Emergency Resources Status</h2>
+      <h2 style = {{ marginTop: '2rem' }}>Emergency Resources Status</h2>
       
       <div className="sidebar-widget">
         <h3>Available Ambulances</h3>
