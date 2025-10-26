@@ -63,15 +63,32 @@ function DeckGLOverlay({ layers }) {
   return null;
 }
 
+function MapContent({ mapCenter, camState, handleCameraChange, layers }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (map && mapCenter) {
+      map.panTo(mapCenter);
+    }
+  }, [mapCenter, map]);
+
+  return (
+    <Map
+      defaultZoom={13}
+      defaultCenter={{ lat: mapCenter.lat, lng: mapCenter.lng }}
+      mapId={import.meta.env.VITE_GOOGLE_MAP_ID}
+      style={{ height: '100%', width: '100%' }}
+      onCameraChanged={handleCameraChange}
+    >
+      <DeckGLOverlay layers={layers} />
+    </Map>
+  );
+}
+
 // ---- Map Container ----
 function MapContainer() {
   const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
-  const mapId = import.meta.env.VITE_GOOGLE_MAP_ID;
-
   const { mapCenter } = useContext(MapCenterContext);
-  //console.log('Map Center from Context:', mapCenter);
-  const searchLat = mapCenter.lat;
-  const searchLng = mapCenter.lng;
 
   const [camState, setCamState] = useState({
     zoom: 13,
@@ -79,13 +96,6 @@ function MapContainer() {
   });
 
   const accidentData = useMemo(() => generateSeattleAccidentData(), []);
-
-  // State to force map refresh
-  const [mapKey, setMapKey] = useState(0);
- 
-
-
-  // ✅ Dynamic heatmap scaling (fixes red blob issue)
   const layers = useMemo(() => {
     // Adjust radius based on zoom level for a consistent appearance
     const radiusPixels = Math.max(10, 60 - (camState.zoom - 13) * 5);
@@ -108,16 +118,10 @@ function MapContainer() {
 
   const handleCameraChange = useCallback(ev => setCamState(ev.detail), []);
 
-
-  useEffect(() => {
-    setMapKey(prev => prev + 1);
-  }, [mapCenter]);
-
   return (
     <APIProvider apiKey={apiKey} onLoad={() => console.log('Maps API Loaded')}>
       <section className="map-container">
         <h2>Live Traffic & Incident Map</h2>
-
         <div
           id="map-placeholder"
           style={{
@@ -126,17 +130,12 @@ function MapContainer() {
             position: 'relative'
           }}
         >
-          <Map
-            key={mapKey}
-            defaultZoom={13}
-            defaultCenter={{ lat: mapCenter.lat, lng: mapCenter.lng }}
-            mapId={mapId}
-            style={{ height: '100%', width: '100%' }}
-            onCameraChanged={handleCameraChange}
-          >
-            <DeckGLOverlay layers={layers} />
-          </Map>
-
+          <MapContent
+            mapCenter={mapCenter}
+            camState={camState}
+            handleCameraChange={handleCameraChange}
+            layers={layers}
+          />
           {/* Legend UI */}
           <div
             style={{
