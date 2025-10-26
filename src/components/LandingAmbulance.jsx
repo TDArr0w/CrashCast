@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import WheelsFront from "../assets/ambulance_wheels_front.png";
 import WheelsRear from "../assets/ambulance_wheels_rear.png";
 import AmbulanceBody from "../assets/ambulance_body.png";
+import Headlights from "../assets/ambulance_headlights.png";
 import LandingCarousel from "./LandingCarousel";
 
 /*====STRUCTURE=====*/
@@ -10,6 +11,7 @@ import LandingCarousel from "./LandingCarousel";
 // Wheels front. pretty simple
 function LandingAmbulance() {
   const [yOffset, setYOffset] = useState(0);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     let start = null;
@@ -22,6 +24,18 @@ function LandingAmbulance() {
       requestAnimationFrame(animate);
     };
     requestAnimationFrame(animate);
+  }, []);
+
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.body.classList.contains('dark'));
+    };
+    
+    checkDarkMode();
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -40,7 +54,8 @@ function LandingAmbulance() {
         left: "50%",
         top: "50%",
         transform: "translate(-420%, -420%) scale(0.5)",
-        transformOrigin: "center"
+        transformOrigin: "center",
+        zIndex: 3 // <-- ADD THIS LINE to ensure it's on top
       }}
     >
       <img
@@ -54,6 +69,18 @@ function LandingAmbulance() {
         alt="Ambulance Body"
         className="ambulance-body"
         style={{ position: "absolute", top: `${yOffset}px`, left: 0 }}
+      />
+      <img
+        src={Headlights}
+        alt="Headlights"
+        className="headlights"
+        style={{ 
+          position: "absolute", 
+          top: `${yOffset}px`, 
+          left: 0,
+          opacity: isDarkMode ? 1 : 0,
+          transition: "opacity 0.5s ease"
+        }}
       />
       <img
         src={WheelsFront}
