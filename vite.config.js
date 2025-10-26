@@ -6,10 +6,11 @@ export default defineConfig({
   server: { host: '0.0.0.0' },        // for `vite` dev server (optional here)
   preview: {
     host: '0.0.0.0',                  // bind to all interfaces
-    port: 4173,
+    port: 5173,
     allowedHosts: [
       'ec2-54-85-61-166.compute-1.amazonaws.com',
-      '54.85.61.166',  
+      '54.85.61.166',
+      '13.216.14.117',  
       'crash-cast.com', 
       'www.crash-cast.com'
     ],
