@@ -5,12 +5,13 @@ import About from '../pages/About';
 import Help from '../pages/Help';
 import Landing from '../pages/Landing';
 
-function Main() {
+
+function Main({ mapCenter }) {
   return (
     <main className="container main-content">
       <Routes>
-      <Route path="/" element={<Landing />} />
-        <Route path="/home" element={<Home />} />
+      <Route path="/" element={<Landing />}  />
+        <Route path="/home" element={<Home  />} />
         <Route path="/about" element={<About />} />
         <Route path="/help" element={<Help />} />
       </Routes>
