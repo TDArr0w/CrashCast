@@ -102,7 +102,7 @@
 .sidebar-widget {
   background-color: #fff;
   border-radius: 8px;
-  padding: 20px;
+  padding: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
@@ -175,7 +175,7 @@
 .ambulance-item {
   display: flex;
   align-items: center;
-  padding: 12px 4px;
+  padding: 12px 8px;
   border-bottom: 1px solid var(--border-color);
 }
 .ambulance-item:last-child {
@@ -195,34 +195,50 @@
   height: 12px;
   border-radius: 50%;
   flex-shrink: 0;
+  position: relative;
 }
+
+/* Assign color variables */
 .status-dot.available {
-  background-color: var(--success-color);
+  --dot-color: var(--success-color);
+  background-color: var(--dot-color);
 }
 .status-dot.en-route {
-  background-color: var(--warning-color);
+  --dot-color: var(--warning-color);
+  background-color: var(--dot-color);
 }
 .status-dot.at-scene {
-  background-color: var(--danger-color);
+  --dot-color: var(--danger-color);
+  background-color: var(--dot-color);
 }
 
-.pulse {
-  animation: pulse 1.5s infinite;
+/* throbbing */
+.status-dot.pulse::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--dot-color); /* ✅ Matches the base dot color */
+  opacity: 0.6;
+  animation: throb 1.5s infinite;
 }
 
 
-@keyframes pulse {
+@keyframes throb {
   0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.4);
+    transform: translate(-50%, -50%) scale(1);
     opacity: 0.6;
   }
+  70% {
+    transform: translate(-50%, -50%) scale(2.5);
+    opacity: 0;
+  }
   100% {
-    transform: scale(1);
-    opacity: 1;
+    opacity: 0;
   }
 }
 
