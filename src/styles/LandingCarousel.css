@@ -3,12 +3,12 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  overflow: hidden; /* ✅ crops bottom */
+  overflow: visible; /* ✅ crops bottom */
   background: transparent;
   align-items: normal;
   width:100vw;
   margin-left: calc(50% - 50vw);
-  z-index: 99999;
+
 }
 
 /* parent ring wrapper */
