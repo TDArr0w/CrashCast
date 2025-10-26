@@ -51,7 +51,7 @@ async function generateCoordinates(city) {
   const res = await fetch(`https://n6obibc9w6.execute-api.us-east-1.amazonaws.com/get-crash-regions?city=${city}`);
   console.log(" accident Fetch response: ", res);
   const data = await res.json();
-  return data.features.map(feature => ({
+  return data.crash_regions.features.map(feature => ({
     COORDINATES: feature.geometry.coordinates,
     WEIGHT: feature.properties.weight
   }));
@@ -69,11 +69,10 @@ async function findEMTS(city) {
   // Parse hospital coordinates as { lat, lng }
   if (
     data &&
-    data.essential_buildings &&
-    data.essential_buildings.hospitals &&
-    data.essential_buildings.hospitals.features
+    data.emt_stations &&
+    data.emt_stations.features
   ) {
-    return data.essential_buildings.hospitals.features.map(feature => {
+    return data.emt_stations.features.map(feature => {
       const [lng, lat] = feature.geometry.coordinates;
       return { lat, lng };
     });
