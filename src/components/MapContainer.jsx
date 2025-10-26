@@ -183,7 +183,8 @@ function MapContainer() {
 
   const [idealLocations, setIdealLocations] = useState([]);
   useEffect(() => {
-    const locations = findBestAverageLocations(accidentData, emtLocations.length);
+    const locations = findBestAverageLocations(accidentData, emtLocations.length * 3
+    );
     setIdealLocations(locations);
   }, [accidentData]);
 
