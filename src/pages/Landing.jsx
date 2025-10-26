@@ -37,11 +37,36 @@ function Landing() {
     <div className="landing-page">
       <section className="hero-section">
         <div className="container">
-          <h1>Welcome to CrashCast</h1>
+          <h1 id = "welcome" >Welcome to CrashCast</h1>
           <p className="subtitle">Real-time traffic accident prediction and emergency resource monitoring</p>
         </div>
       </section>
 
+      
+<section className="region-input-section">
+        <h2>Search your region</h2>
+        <form onSubmit={handleSubmit} className="region-form">
+          <input
+            type="text"
+            placeholder="Type your city or region (e.g., 'San Francisco'), then press 'Enter'"
+            
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            required
+            aria-label="Enter your region"
+            
+          />
+        <button type="submit" aria-label="Search">
+              &#128269;
+            </button>
+        </form>
+        
+      </section>
+      {/* Region Input Section */}
+
+      {/* end of top carousel */}
+      <LandingCarousel />
+      
       {/* Stats Carousel Section */}
       <section className="stats-carousel-section">
         <div className="container">
@@ -63,28 +88,6 @@ function Landing() {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Region Input Section */}
-
-      {/* end of top carousel */}
-      <LandingCarousel />
-      
-      <section className="region-input-section">
-        <h2>See Your Region’s Potential</h2>
-        <form onSubmit={handleSubmit} className="region-form">
-          <input
-            type="text"
-            placeholder="Enter your city or region (e.g., 'San Francisco')"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            required
-            aria-label="Enter your region"
-          />
-          <button type="submit" className="btn btn-primary">
-            Analyze Now
-          </button>
-        </form>
       </section>
     </div>
   );
