@@ -16,7 +16,7 @@ export const DarkModeToggle = () => {
   return (
     <label
       htmlFor="dark-mode-toggle"
-      style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", marginright: "4px" }}
+      style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", marginright: "10rem" }}
     >
       <Switch
         id="dark-mode-toggle"
