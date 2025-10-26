@@ -55,10 +55,6 @@ body {
       }
     }
 
-    .container {
-      background-color: #2b2b2b;
-    }
-
     .sidebar {
       background-color: #222;
       border-right: 1px solid #444;
@@ -66,6 +62,12 @@ body {
 
     h3 {
       border-bottom: 2px solid #555;
+    }
+    .sidebar-widget {
+      background-color: #222;
+    }
+    .site-header {
+      background-color: #2b2b2b;
     }
   }
 }
