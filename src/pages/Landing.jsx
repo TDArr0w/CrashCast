@@ -1,8 +1,6 @@
-// pages/Landing.jsx
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapCenterContext } from '../context/MapCenterContext';
-import LandingCarousel from '../components/LandingCarousel';
 
 const stats = [
   { number: '7%', text: 'Increase in fatalities for every 10-minute increase in ambulance journey time.' },
@@ -12,25 +10,26 @@ const stats = [
 ];
 
 function Landing() {
+  const [currentStatIndex, setCurrentStatIndex] = useState(0);
   const [search, setSearch] = useState('');
-  const { setMapCenter } = useContext(MapCenterContext);
+  const { searchLocation } = useContext(MapCenterContext);
   const navigate = useNavigate();
+
+  // Carousel auto-rotation logic
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStatIndex((prevIndex) => (prevIndex + 1) % stats.length);
+    }, 5000); // Change stat every 5 seconds (5000ms)
+
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (search.trim()) {
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(search)}`);
-      const results = await response.json();
-      if (results[0]) {
-        setMapCenter({
-          lat: parseFloat(results[0].lat),
-          lng: parseFloat(results[0].lon),
-        });
-        setSearch('');
-        navigate('/home');
-      } else {
-        alert('Location not found. Please try a different search term.');
-      }
+      const found = await searchLocation(search);
+      setSearch('');
+      if (found) navigate('/home');
     }
   };
 
@@ -72,22 +71,23 @@ function Landing() {
       <LandingCarousel />
       
       <section className="region-input-section">
-        <div className="container">
-          <h2>Enter Your Region</h2>
-          <form className="region-form" onSubmit={handleSubmit}>
-            <input 
-              type="text" 
-              placeholder="Search for a city or address..." 
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              required
-            />
-            <button type="submit" className="btn btn-primary">Get Started</button>
-          </form>
-        </div>
+        <h2>See Your Region’s Potential</h2>
+        <form onSubmit={handleSubmit} className="region-form">
+          <input
+            type="text"
+            placeholder="Enter your city or region (e.g., 'San Francisco')"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            required
+            aria-label="Enter your region"
+          />
+          <button type="submit" className="btn btn-primary">
+            Analyze Now
+          </button>
+        </form>
       </section>
     </div>
   );
-}
+};
 
 export default Landing;

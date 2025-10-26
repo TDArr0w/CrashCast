@@ -5,25 +5,23 @@ import { MapCenterContext } from '../context/MapCenterContext';
 import logo from '../assets/CrashCast-TextRed.png';
 
 function Header() {
-  const [search, setSearch] = useState('');
-  const { setMapCenter } = useContext(MapCenterContext);
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (search.trim()) {
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(search)}`);
-      const results = await response.json();
-      if (results[0]) {
-        setMapCenter({
-          lat: parseFloat(results[0].lat),
-          lng: parseFloat(results[0].lon),
-        });
+    const [currentStatIndex, setCurrentStatIndex] = useState(0);
+    const [search, setSearch] = useState('');
+    const { searchLocation } = useContext(MapCenterContext);
+    const navigate = useNavigate();
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      if (search.trim()) {
+        const found = await searchLocation(search);
+        setSearch('');
+        if (found){
+          console.log('Location found, navigating to /home');
+          navigate('/home');
+          
+        }
       }
-      setSearch('');
-      navigate('/home');
-    }
-  };
+    };
 
   return (
     <header className="site-header">

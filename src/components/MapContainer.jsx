@@ -69,6 +69,9 @@ function MapContainer() {
   const mapId = import.meta.env.VITE_GOOGLE_MAP_ID;
 
   const { mapCenter } = useContext(MapCenterContext);
+  //console.log('Map Center from Context:', mapCenter);
+  const searchLat = mapCenter.lat;
+  const searchLng = mapCenter.lng;
 
   const [camState, setCamState] = useState({
     zoom: 13,
@@ -76,6 +79,11 @@ function MapContainer() {
   });
 
   const accidentData = useMemo(() => generateSeattleAccidentData(), []);
+
+  // State to force map refresh
+  const [mapKey, setMapKey] = useState(0);
+ 
+
 
   // ✅ Dynamic heatmap scaling (fixes red blob issue)
   const layers = useMemo(() => {
@@ -100,6 +108,11 @@ function MapContainer() {
 
   const handleCameraChange = useCallback(ev => setCamState(ev.detail), []);
 
+
+  useEffect(() => {
+    setMapKey(prev => prev + 1);
+  }, [mapCenter]);
+
   return (
     <APIProvider apiKey={apiKey} onLoad={() => console.log('Maps API Loaded')}>
       <section className="map-container">
@@ -114,8 +127,9 @@ function MapContainer() {
           }}
         >
           <Map
+            key={mapKey}
             defaultZoom={13}
-            center={{ lat: mapCenter.lat, lng: mapCenter.lng }}
+            defaultCenter={{ lat: mapCenter.lat, lng: mapCenter.lng }}
             mapId={mapId}
             style={{ height: '100%', width: '100%' }}
             onCameraChanged={handleCameraChange}
