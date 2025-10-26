@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LandingCarousel from '../components/LandingCarousel';
 
 const stats = [
   { number: '7%', text: 'Increase in fatalities for every 10-minute increase in ambulance journey time.' },
@@ -39,7 +40,7 @@ function Landing() {
           saving lives and valuable time.
         </p>
       </section>
-
+{/* This is the carousel yeah yeah */}
       <section className="stats-carousel-section">
         <div className="stats-carousel-container">
           <div className="stats-carousel-track" style={{ transform: `translateX(-${currentStatIndex * 100}%)` }}>
@@ -52,6 +53,9 @@ function Landing() {
           </div>
         </div>
       </section>
+
+      {/* end of top carousel */}
+      <LandingCarousel />
       
       <section className="region-input-section">
         <h2>See Your Region’s Potential</h2>
