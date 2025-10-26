@@ -1,7 +1,8 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useContext } from 'react';
 import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 import { APIProvider, Map, useMap } from '@vis.gl/react-google-maps';
 import { GoogleMapsOverlay } from '@deck.gl/google-maps';
+import { MapCenterContext } from '../context/MapCenterContext';
 
 // ---- Fake Accident Data ----
 const generateSeattleAccidentData = () => {
@@ -67,6 +68,8 @@ function MapContainer() {
   const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
   const mapId = import.meta.env.VITE_GOOGLE_MAP_ID;
 
+  const { mapCenter } = useContext(MapCenterContext);
+
   const [camState, setCamState] = useState({
     zoom: 13,
     center: { lat: 47.6061, lng: -122.3328 }
@@ -112,7 +115,7 @@ function MapContainer() {
         >
           <Map
             defaultZoom={13}
-            defaultCenter={{ lat: 47.6061, lng: -122.3328 }}
+            center={{ lat: mapCenter.lat, lng: mapCenter.lng }}
             mapId={mapId}
             style={{ height: '100%', width: '100%' }}
             onCameraChanged={handleCameraChange}
